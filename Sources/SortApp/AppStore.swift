@@ -535,9 +535,10 @@ final class AppStore: ObservableObject {
             guard let la = p.gpsLat, let lo = p.gpsLon else { continue }
             buckets["\(Int((la / 0.05).rounded())),\(Int((lo / 0.05).rounded()))", default: []].append(p)
         }
-        return buckets.map { key, ps in
-            (key, ps.compactMap(\.gpsLat).reduce(0, +) / Double(ps.count),
-             ps.compactMap(\.gpsLon).reduce(0, +) / Double(ps.count), ps)
+        return buckets.map { key, ps -> (key: String, lat: Double, lon: Double, photos: [Photo]) in
+            let lat = ps.compactMap(\.gpsLat).reduce(0, +) / Double(ps.count)
+            let lon = ps.compactMap(\.gpsLon).reduce(0, +) / Double(ps.count)
+            return (key, lat, lon, ps)
         }
     }
 
@@ -845,14 +846,14 @@ final class AppStore: ObservableObject {
               let photo = try? photosRepo.find(face.photoId),
               let url = imageLoader.url(for: photo) else { return nil }
         let box = CGRect(x: face.bboxX, y: face.bboxY, width: face.bboxW, height: face.bboxH)
-        return await Task.detached(priority: .utility) {
+        let crop: CGImage? = await Task.detached(priority: .utility) {
             guard let cg = try? ImageLoader.load(url, maxPixelSize: 1200) else { return nil }
             let detected = DetectedFace(boundingBox: box, roll: nil, yaw: nil, pitch: nil,
                                         quality: nil, landmarks5: nil)
-            guard let crop = FaceAligner(outputSize: side, margin: 0.4).alignedCrop(from: cg, face: detected)
-            else { return nil }
-            return NSImage(cgImage: crop, size: NSSize(width: side, height: side))
+            return FaceAligner(outputSize: side, margin: 0.4).alignedCrop(from: cg, face: detected)
         }.value
+        guard let crop else { return nil }
+        return NSImage(cgImage: crop, size: NSSize(width: side, height: side))
     }
 
     // MARK: - Lightbox + native selection
