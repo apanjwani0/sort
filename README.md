@@ -22,8 +22,12 @@ elsewhere — but that only ever happens when you ask for it.
 
 ## Getting started
 
-Got the `.dmg` already? Open it, drag **Sort.app** into Applications, launch it, and pick a folder.
-That's it.
+Grab the latest `.dmg` from [Releases](../../releases) (one is built automatically for every
+version bump), open it, drag **Sort.app** into Applications, launch it, and pick a folder. That's it.
+
+> **First launch:** the DMG is ad-hoc signed (no paid Apple Developer ID), so macOS Gatekeeper will
+> say it's from an unidentified developer. Right-click **Sort.app** → **Open** → **Open** once, or
+> run `xattr -dr com.apple.quarantine /Applications/Sort.app`. Only needed the first time.
 
 Running from source:
 

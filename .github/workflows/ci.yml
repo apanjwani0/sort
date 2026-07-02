@@ -16,3 +16,53 @@ jobs:
         run: swift build
       - name: Test
         run: swift test
+
+  # Cuts a GitHub Release + Sort-<version>.dmg only when packaging/Info.plist's version has actually
+  # bumped (a release "v<version>" doesn't already exist) — pushes that don't touch the version are a
+  # no-op here, so this never re-releases the same build twice.
+  release:
+    needs: build-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check version
+        id: version
+        run: |
+          VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' packaging/Info.plist)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Skip if this version was already released
+        id: check
+        run: |
+          if gh release view "v${{ steps.version.outputs.version }}" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "No version bump — skipping release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      # Ad-hoc signed only — no paid Apple Developer ID configured. Users see one Gatekeeper
+      # "unidentified developer" prompt on first launch (documented in the README).
+      - name: Fetch face model (pinned by packaging/MODEL_VERSION)
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          MODEL_VERSION="$(cat packaging/MODEL_VERSION)"
+          mkdir -p "$RUNNER_TEMP/models"
+          gh release download models --repo "${{ github.repository }}" \
+            -p "${MODEL_VERSION}.mlmodelc.zip" -D "$RUNNER_TEMP" --clobber
+          ditto -x -k "$RUNNER_TEMP/${MODEL_VERSION}.mlmodelc.zip" "$RUNNER_TEMP/models"
+          echo "SORT_MODELS_DIR=$RUNNER_TEMP/models" >> "$GITHUB_ENV"
+      - name: Build DMG
+        if: steps.check.outputs.exists == 'false'
+        run: ./packaging/make_dmg.sh
+      - name: Publish release
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            "build/Sort-${{ steps.version.outputs.version }}.dmg" \
+            --repo "${{ github.repository }}" \
+            --title "Sort v${{ steps.version.outputs.version }}" \
+            --generate-notes
