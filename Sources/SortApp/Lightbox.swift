@@ -155,12 +155,11 @@ struct LightboxView: View {
             player = AVPlayer(url: url)
             return
         }
-        let decoded = await Task.detached(priority: .userInitiated) {
-            (try? ImageLoader.load(url, maxPixelSize: 2400))
-                .map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
+        let decoded: CGImage? = await Task.detached(priority: .userInitiated) {
+            try? ImageLoader.load(url, maxPixelSize: 2400)
         }.value
         if Task.isCancelled { return }   // user arrowed to another photo mid-decode
-        image = decoded
+        image = decoded.map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
     }
 
     private func reveal() {

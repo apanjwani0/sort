@@ -27,12 +27,12 @@ final class PhotoImageLoader: @unchecked Sendable {
         let key = NSNumber(value: id)
         if let cached = cache.object(forKey: key) { return cached }
         guard let url = url(for: photo) else { return nil }
-        let image = photo.category == "video"
+        let cg: CGImage? = photo.category == "video"
             ? await Self.videoPoster(url, maxPixel: maxPixel)
             : await Task.detached(priority: .utility) {
-                (try? ImageLoader.load(url, maxPixelSize: maxPixel))
-                    .map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
+                try? ImageLoader.load(url, maxPixelSize: maxPixel)
             }.value
+        let image = cg.map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
         if let image {
             // Cost ≈ decoded bitmap bytes so totalCostLimit can evict the biggest thumbnails first.
             let cost = Int(image.size.width * image.size.height) * 4
@@ -43,13 +43,13 @@ final class PhotoImageLoader: @unchecked Sendable {
 
     /// A poster frame for a video (first decodable frame near the start). `AVAssetImageGenerator` does
     /// its own off-main work, so no extra detach. ponytail: one frame at t≈0.5s — good enough for a card.
-    private static func videoPoster(_ url: URL, maxPixel: Int) async -> NSImage? {
+    private static func videoPoster(_ url: URL, maxPixel: Int) async -> CGImage? {
         let gen = AVAssetImageGenerator(asset: AVURLAsset(url: url))
         gen.appliesPreferredTrackTransform = true
         gen.maximumSize = CGSize(width: maxPixel, height: maxPixel)
         for t in [CMTime(seconds: 0.5, preferredTimescale: 600), .zero] {
             if let cg = try? await gen.image(at: t).image {
-                return NSImage(cgImage: cg, size: NSSize(width: cg.width, height: cg.height))
+                return cg
             }
         }
         return nil
