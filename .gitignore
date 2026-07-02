@@ -1,0 +1,43 @@
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# --- Xcode / Swift ---
+.build/
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+.swiftpm/
+Packages/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# --- Python (in case of an ML sidecar) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+
+# --- ML model weights (large; fetched/converted locally) ---
+*.mlmodel
+*.mlpackage
+*.onnx
+models/
+
+# --- App-generated local index / caches (never commit user data) ---
+*.sqlite
+*.sqlite-*
+*.db
+cache/
+thumbnails/
+
+# --- secrets ---
+secrets/

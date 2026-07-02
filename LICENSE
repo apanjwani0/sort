@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 Aman Panjwani
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+NOTE ON THE FACE-EMBEDDING MODEL: this MIT license covers the source code only;
+bundled model weights carry their own licenses. The packaged `.app`/`.dmg` bundles
+AuraFace v1 (Apache-2.0, https://huggingface.co/fal/AuraFace-v1) — commercial-clean
+and free to redistribute. A plain `swift build` uses Apple Vision (no model, no
+restriction). ArcFace `buffalo_l` (InsightFace) is an optional higher-accuracy swap
+but is NON-COMMERCIAL (personal use only) and is NOT distributed with this repository;
+do not attach a buffalo_l-bundled `.app`/`.dmg` to a public release. EdgeFace is also
+non-commercial (CC BY-NC-SA). See docs/MODELS.md before redistributing any build.
