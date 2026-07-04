@@ -3,6 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-macOS%2015%2B-blue)
 
+<p align="center">
+  <img src="screenshots/library.png" alt="Sort — browse your photos by person" width="820">
+</p>
+
 Point it at a folder or an external drive and it figures out who's in your photos, then lets you
 browse by person. Cats and dogs get their own groups too. It all runs on your Mac — no account, no
 cloud, no internet connection.
@@ -25,14 +29,21 @@ elsewhere — but that only ever happens when you ask for it.
 Grab the latest `.dmg` from [Releases](../../releases) (one is built automatically for every
 version bump), open it, drag **Sort.app** into Applications, launch it, and pick a folder. That's it.
 
-> **First launch:** the DMG is ad-hoc signed (no paid Apple Developer ID), so macOS Gatekeeper will
-> say it's from an unidentified developer. Right-click **Sort.app** → **Open** → **Open** once, or
-> run `xattr -dr com.apple.quarantine /Applications/Sort.app`. Only needed the first time.
+<p align="center">
+  <img src="screenshots/welcome.png" alt="First-run screen — pick a folder or drive to index; photos never leave your Mac" width="640">
+</p>
+
+> [!TIP]
+> **macOS will block the first launch.** This build is ad-hoc signed (no paid Apple Developer ID),
+> so Gatekeeper says *"Sort" was blocked to protect your Mac* and warns it may contain malware — it
+> doesn't; that's just Apple's default stance on unsigned/ad-hoc apps. To open it: **System Settings
+> → Privacy & Security → Security**, then click **Open Anyway** next to the Sort warning, and confirm
+> in the dialog. Only needed once, on first launch.
 
 Running from source:
 
 ```bash
-git clone <repo-url> sort && cd sort
+git clone https://github.com/apanjwani0/sort.git && cd sort
 swift run sort-app          # builds and launches the app
 ```
 
@@ -93,8 +104,8 @@ download. `CONFIG=debug ./packaging/make_dmg.sh` gives you a faster, unoptimized
 A heads-up on sharing: local builds run on *your* Mac for free (ad-hoc signed). To hand the `.dmg` to
 someone else without a Gatekeeper warning, you need a paid Apple Developer ID ($99/yr) plus
 notarization — that path is already wired into `make_dmg.sh` (see the comments in
-[`packaging/make_app.sh`](packaging/make_app.sh)). Without paying, a recipient can still open it once
-with right-click → **Open**.
+[`packaging/make_app.sh`](packaging/make_app.sh)). Without paying, a recipient can still open it via
+**System Settings → Privacy & Security → Security → Open Anyway** (see the tip above).
 
 ---
 
@@ -137,6 +148,13 @@ Grouping quality comes down to the face embedder:
   sharper grouping (and commercial-clean, so the DMG is free to redistribute). It's swappable behind
   the `embedding_model` column; ArcFace `buffalo_l` is an optional higher-accuracy swap for personal
   use. More in [docs/MODELS.md](docs/MODELS.md).
+
+Pick the model and tune the clustering yourself in **Settings → Grouping** — cluster/pet thresholds,
+minimum group size, and how aggressively to suggest look-alike merges:
+
+<p align="center">
+  <img src="screenshots/grouping.png" alt="Grouping settings — pick the embedding model and tune clustering thresholds" width="420">
+</p>
 
 ---
 
