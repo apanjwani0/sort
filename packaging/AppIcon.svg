@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1C1C1E" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    <linearGradient id="sortedMedia" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9F0A" />
+      <stop offset="100%" stop-color="#FF375F" />
+    </linearGradient>
+    <linearGradient id="sortingMedia" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#32ADE6" />
+      <stop offset="100%" stop-color="#007AFF" />
+    </linearGradient>
+  </defs>
+
+  <!-- Foundation Container -->
+  <rect width="512" height="512" rx="115" fill="url(#bg)" />
+
+  <!-- Unsorted Background Frame (Tilted Left) -->
+  <g transform="translate(256, 256) rotate(-18) translate(-256, -256)">
+    <rect x="126" y="156" width="260" height="200" rx="24" fill="#3A3A3C" stroke="#8E8E93" stroke-width="8" />
+  </g>
+
+  <!-- Processing Middle Frame (Tilted Right) -->
+  <g transform="translate(256, 256) rotate(12) translate(-256, -256)">
+    <rect x="126" y="156" width="260" height="200" rx="24" fill="url(#sortingMedia)" stroke="#FFFFFF" stroke-width="8" />
+    <!-- Subtle Video Indicator -->
+    <polygon points="236,226 286,256 236,286" fill="#FFFFFF" opacity="0.8" />
+  </g>
+
+  <!-- Perfectly Aligned Foreground Frame (Sorted) -->
+  <rect x="126" y="166" width="260" height="200" rx="24" fill="url(#sortedMedia)" stroke="#FFFFFF" stroke-width="8" />
+
+  <!-- Minimalist Photo Indicator (Sun & Mountain Geometry) -->
+  <circle cx="196" cy="216" r="18" fill="#FFFFFF" opacity="0.9" />
+  <polygon points="126,366 216,256 276,326 316,276 386,366" fill="#FFFFFF" opacity="0.6" />
+</svg>
