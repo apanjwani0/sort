@@ -1,7 +1,12 @@
-# sort
+<h1 align="center">
+  <img src="packaging/AppIcon.svg" width="96" alt="Sort app icon"><br>
+  sort
+</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Platform](https://img.shields.io/badge/platform-macOS%2015%2B-blue)
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <img alt="Platform: macOS 15+" src="https://img.shields.io/badge/platform-macOS%2015%2B-blue">
+</p>
 
 <p align="center">
   <img src="screenshots/library.png" alt="Sort — browse your photos by person" width="820">
